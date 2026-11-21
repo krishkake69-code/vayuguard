@@ -32,11 +32,7 @@ export type AQIReading = {
 
 export type FamilyMember = "toddlers" | "schoolKids" | "adults" | "seniors" | "asthma";
 export type CommuteMode = "twoWheelerWalk" | "car" | "publicTransit" | "workFromHome";
-export type HomeContext =
-  | "hasPurifier"
-  | "usesIncense"
-  | "hasBalconyWindows"
-  | "gasStoveCooking";
+export type HomeContext = "hasPurifier" | "usesIncense" | "hasBalconyWindows" | "gasStoveCooking";
 
 export type FamilyProfile = {
   members: FamilyMember[];
@@ -76,11 +72,11 @@ export type AuditResponse = {
 
 /* Pre-loaded Indian cities with coordinates */
 export const INDIAN_CITIES: City[] = [
-  { name: "Delhi", latitude: 28.6139, longitude: 77.2090, country: "IN" },
+  { name: "Delhi", latitude: 28.6139, longitude: 77.209, country: "IN" },
   { name: "Gurugram", latitude: 28.4595, longitude: 77.0266, country: "IN" },
-  { name: "Noida", latitude: 28.5355, longitude: 77.3910, country: "IN" },
+  { name: "Noida", latitude: 28.5355, longitude: 77.391, country: "IN" },
   { name: "Ghaziabad", latitude: 28.6692, longitude: 77.4538, country: "IN" },
-  { name: "Mumbai", latitude: 19.0760, longitude: 72.8777, country: "IN" },
+  { name: "Mumbai", latitude: 19.076, longitude: 72.8777, country: "IN" },
   { name: "Bengaluru", latitude: 12.9716, longitude: 77.5946, country: "IN" },
   { name: "Chennai", latitude: 13.0827, longitude: 80.2707, country: "IN" },
   { name: "Kolkata", latitude: 22.5726, longitude: 88.3639, country: "IN" },

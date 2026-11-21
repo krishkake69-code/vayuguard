@@ -66,7 +66,7 @@ function Chip({
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
         active
           ? "border-foreground bg-foreground text-background shadow-sm"
-          : "border-border bg-background text-foreground hover:border-foreground/40"
+          : "border-border bg-background text-foreground hover:border-foreground/40",
       )}
       aria-pressed={active}
     >

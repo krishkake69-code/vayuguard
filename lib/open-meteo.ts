@@ -16,24 +16,26 @@ function withTimeout<T>(promise: Promise<T>, ms = 10000): Promise<T> {
   return Promise.race([
     promise,
     new Promise<never>((_resolve, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), ms)
+      setTimeout(() => reject(new Error("Request timed out")), ms),
     ),
   ]);
 }
 
 /* Raw Open-Meteo response shape (API field names) */
 type RawAQResponse = {
-  hourly: { time: string[]; pm2_5: (number | null)[]; pm10: (number | null)[]; us_aqi: (number | null)[] };
+  hourly: {
+    time: string[];
+    pm2_5: (number | null)[];
+    pm10: (number | null)[];
+    us_aqi: (number | null)[];
+  };
   current?: { time: string; pm2_5: number | null; pm10: number | null; us_aqi: number | null };
   latitude: number;
   longitude: number;
   generationtime_ms: number;
 };
 
-export async function fetchHourlyAQI(
-  latitude: number,
-  longitude: number
-): Promise<RawAQResponse> {
+export async function fetchHourlyAQI(latitude: number, longitude: number): Promise<RawAQResponse> {
   // timezone=auto lets Open-Meteo return times in the city's own local time.
   const url = `${AQI_BASE}?latitude=${latitude}&longitude=${longitude}&current=pm2_5,pm10,us_aqi&hourly=pm2_5,pm10,us_aqi&timezone=auto`;
   const res = await withTimeout(fetch(url));
@@ -84,7 +86,13 @@ export function computeIndianAQI(pm25: number, pm10: number): number {
 
 /* ------------------------------------------------------------------ geocoding */
 
-export type GeoCity = { name: string; latitude: number; longitude: number; country: string; admin1?: string };
+export type GeoCity = {
+  name: string;
+  latitude: number;
+  longitude: number;
+  country: string;
+  admin1?: string;
+};
 
 type GeocodeResult = {
   name: string;
@@ -149,13 +157,24 @@ export async function searchLocalities(query: string): Promise<LocalityResult[]>
     if (!res.ok) return [];
     const data = await res.json();
     return (Array.isArray(data) ? data : [])
-      .filter((r: NominatimResult) => r.address?.country_code === "in" || /india/i.test(r.display_name || ""))
+      .filter(
+        (r: NominatimResult) =>
+          r.address?.country_code === "in" || /india/i.test(r.display_name || ""),
+      )
       .map((r: NominatimResult) => {
         const a: NominatimAddress = r.address || {};
         const name =
-          a.neighbourhood || a.suburb || a.quarter || a.residential ||
-          a.city_district || a.town || a.village || a.city || a.county ||
-          r.display_name?.split(",")[0] || query.trim();
+          a.neighbourhood ||
+          a.suburb ||
+          a.quarter ||
+          a.residential ||
+          a.city_district ||
+          a.town ||
+          a.village ||
+          a.city ||
+          a.county ||
+          r.display_name?.split(",")[0] ||
+          query.trim();
         const parent = a.city || a.town || a.county || a.state_district || "";
         return {
           name,
@@ -202,7 +221,7 @@ export async function reverseGeocode(latitude: number, longitude: number): Promi
 
 /* Compute the lowest average PM2.5 2-hour window from hourly data */
 export function computeBestVentilationWindow(
-  hourly: { time: string; pm2_5: number; pm10: number; aqi: number }[]
+  hourly: { time: string; pm2_5: number; pm10: number; aqi: number }[],
 ): { timeRange: string; reason: string; avgPm25: number } {
   if (hourly.length < 2) {
     return { timeRange: "Data unavailable", reason: "Insufficient hourly data", avgPm25: 0 };
@@ -239,7 +258,7 @@ export function computeBestVentilationWindow(
  */
 export function buildAQIReading(
   city: { name: string; latitude: number; longitude: number; country?: string },
-  raw: RawAQResponse
+  raw: RawAQResponse,
 ): { current: HourlyReading; hourly: HourlyReading[]; bestVentilationWindow: VentilationWindow } {
   const all = raw.hourly.time.map((t, i) => {
     const pm25 = raw.hourly.pm2_5[i] ?? 0;
@@ -253,7 +272,12 @@ export function buildAQIReading(
   });
 
   const nowKey = raw.current?.time;
-  const startIdx = nowKey ? Math.max(0, all.findIndex((p) => p.time >= nowKey)) : 0;
+  const startIdx = nowKey
+    ? Math.max(
+        0,
+        all.findIndex((p) => p.time >= nowKey),
+      )
+    : 0;
   const h = all.slice(startIdx, startIdx + 24);
 
   const curPm25 = raw.current?.pm2_5 ?? h[0]?.pm2_5 ?? 0;
@@ -265,7 +289,7 @@ export function buildAQIReading(
         pm10: curPm10,
         aqi: computeIndianAQI(curPm25, curPm10),
       }
-    : h[0] ?? { time: "", pm2_5: 0, pm10: 0, aqi: 0 };
+    : (h[0] ?? { time: "", pm2_5: 0, pm10: 0, aqi: 0 });
 
   const window = computeBestVentilationWindow(h);
   return { current, hourly: h, bestVentilationWindow: window };

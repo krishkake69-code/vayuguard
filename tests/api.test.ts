@@ -114,7 +114,11 @@ describe("POST /api/audit", () => {
     const req = new Request("http://localhost/api/audit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: "a".repeat(500), mimeType: "application/pdf", currentAQI: 100 }),
+      body: JSON.stringify({
+        image: "a".repeat(500),
+        mimeType: "application/pdf",
+        currentAQI: 100,
+      }),
     });
     const res = await auditPOST(req);
     expect(res.status).toBe(400);

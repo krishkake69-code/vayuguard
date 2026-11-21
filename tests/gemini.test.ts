@@ -47,7 +47,9 @@ describe("fallbackRoutine", () => {
 
   it("mentions a purifier when the household has one", () => {
     const r = fallbackRoutine(300, { ...DEFAULT_PROFILE, homeContext: ["hasPurifier"] }, "Delhi");
-    expect(r.dailyTimeline.some((t) => /purifier/i.test(t.activity + t.safetyNote + t.emissionTip))).toBe(true);
+    expect(
+      r.dailyTimeline.some((t) => /purifier/i.test(t.activity + t.safetyNote + t.emissionTip)),
+    ).toBe(true);
   });
 });
 

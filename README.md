@@ -114,6 +114,7 @@ Without a key, live AQI still loads, and the AI endpoints use built-in fallback 
 npm run build && npm start   # production
 npm test                     # run the automated test suite
 npm run lint                 # ESLint (next/core-web-vitals + next/typescript)
+npm run format:check         # Prettier formatting check
 ```
 
 ---
@@ -123,7 +124,7 @@ npm run lint                 # ESLint (next/core-web-vitals + next/typescript)
 - **Code Quality** — typed TS, one module per concern, validation at boundaries.
 - **Security** — server-only SDK, env-based key, input validation, no key in client bundle.
 - **Efficiency** — free keyless air API, no image weight for the dashboard, lazy client init.
-- **Testing** — automated Vitest suite with **40 passing tests** across 3 files (`tests/`) covering India AQI math, the lowest-2-hour ventilation window, 24-hour reading slicing, geocoding/locality parsing (mocked fetch), reverse-geocoding fallback, Gemini fallback JSON shapes, and API route validation (200/400/500 paths, multipart type checks). Run with `npm test`. ESLint runs clean with `npm run lint` (next/core-web-vitals + next/typescript), and `npm run build` type-checks the whole app.
+- **Testing** — automated Vitest suite with **51 passing tests** across 4 files (`tests/`) covering India AQI math, the lowest-2-hour ventilation window, 24-hour reading slicing, geocoding/locality parsing (mocked fetch), reverse-geocoding fallback, shared Zod schema validation, Gemini fallback JSON shapes, and API route validation (200/400/500 paths, multipart type checks). `npm test`, `npm run lint`, `npm run format:check`, and `npm run build` all pass. A **GitHub Actions CI workflow** (`.github/workflows/ci.yml`) runs lint + test + build on every push and PR.
 - **Accessibility** — semantic headings, labelled controls, `aria-pressed` toggles, focus rings, high-contrast severity theming.
 - **Problem Alignment** — exact 2-hour ventilation window, vulnerable-member warnings, Indian household hacks, multimodal audit, live-data-only dashboard.
 

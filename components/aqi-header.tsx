@@ -29,7 +29,7 @@ function TrendBar({ reading }: { reading: AQIReading }) {
                       ? "bg-red-500"
                       : h.pm2_5 > 150
                         ? "bg-orange-400"
-                        : "bg-sky-400/70"
+                        : "bg-sky-400/70",
                 )}
                 style={{ height: `${height}%` }}
               />
@@ -65,7 +65,15 @@ export function AQIHeader({
   const severity = reading
     ? ((): string => {
         const a = reading.current.aqi;
-        return a <= 50 ? "good" : a <= 100 ? "moderate" : a <= 150 ? "poor" : a <= 300 ? "severe" : "hazardous";
+        return a <= 50
+          ? "good"
+          : a <= 100
+            ? "moderate"
+            : a <= 150
+              ? "poor"
+              : a <= 300
+                ? "severe"
+                : "hazardous";
       })()
     : "good";
 
@@ -77,7 +85,7 @@ export function AQIHeader({
     <section
       className={cn(
         "relative rounded-2xl border border-border bg-card p-6 shadow-sm",
-        `severity-${severity}`
+        `severity-${severity}`,
       )}
     >
       <div
@@ -117,8 +125,18 @@ export function AQIHeader({
                   </div>
                 </div>
                 <div className="ml-2 flex gap-4">
-                  <Metric icon={<Wind className="h-4 w-4" />} label="PM2.5" value={`${Math.round(reading.current.pm2_5)}`} unit="µg/m³" />
-                  <Metric icon={<Eye className="h-4 w-4" />} label="PM10" value={`${Math.round(reading.current.pm10)}`} unit="µg/m³" />
+                  <Metric
+                    icon={<Wind className="h-4 w-4" />}
+                    label="PM2.5"
+                    value={`${Math.round(reading.current.pm2_5)}`}
+                    unit="µg/m³"
+                  />
+                  <Metric
+                    icon={<Eye className="h-4 w-4" />}
+                    label="PM10"
+                    value={`${Math.round(reading.current.pm10)}`}
+                    unit="µg/m³"
+                  />
                 </div>
               </div>
 
@@ -145,7 +163,17 @@ export function AQIHeader({
   );
 }
 
-function Metric({ icon, label, value, unit }: { icon: React.ReactNode; label: string; value: string; unit: string }) {
+function Metric({
+  icon,
+  label,
+  value,
+  unit,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  unit: string;
+}) {
   return (
     <div className="rounded-lg border border-border bg-background/60 px-3 py-2">
       <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">

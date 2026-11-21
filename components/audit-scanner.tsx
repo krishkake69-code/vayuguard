@@ -2,7 +2,16 @@
 
 import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import { Camera, UploadCloud, X, ScanLine, Loader2, ShieldCheck, AlertTriangle, Lightbulb } from "lucide-react";
+import {
+  Camera,
+  UploadCloud,
+  X,
+  ScanLine,
+  Loader2,
+  ShieldCheck,
+  AlertTriangle,
+  Lightbulb,
+} from "lucide-react";
 import type { AuditResponse } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -83,7 +92,8 @@ export function AuditScanner({
         <div>
           <h2 className="text-lg font-bold">Room & Mask Audit</h2>
           <p className="text-xs text-muted-foreground">
-            Upload a photo of a window gap, purifier placement, or your mask — Gemini Vision grades the protection at {Math.round(currentAQI)} AQI.
+            Upload a photo of a window gap, purifier placement, or your mask — Gemini Vision grades
+            the protection at {Math.round(currentAQI)} AQI.
           </p>
         </div>
       </div>
@@ -115,7 +125,7 @@ export function AuditScanner({
           onClick={() => fileInput.current?.click()}
           className={cn(
             "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-background/50 p-8 text-center transition-colors hover:border-foreground/40",
-            dragging && "border-foreground bg-accent/30"
+            dragging && "border-foreground bg-accent/30",
           )}
         >
           <UploadCloud className="h-10 w-10 text-muted-foreground" />
@@ -153,7 +163,11 @@ export function AuditScanner({
           </div>
           <div className="flex gap-2">
             <button onClick={scan} disabled={loading} className="btn flex-1">
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ScanLine className="mr-2 h-4 w-4" />}
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <ScanLine className="mr-2 h-4 w-4" />
+              )}
               {loading ? "Analyzing with Gemini Vision…" : "Audit this photo"}
             </button>
             <button onClick={clear} className="btn-outline" disabled={loading}>
@@ -169,12 +183,19 @@ export function AuditScanner({
         <div className="space-y-3 rounded-xl border border-border bg-background/60 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Detected subject</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Detected subject
+              </p>
               <p className="text-sm font-bold">{result.detectedSubject}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Protection score</p>
-              <p className={cn("text-2xl font-extrabold tabular-nums", scoreTone)}>{score}<span className="text-sm text-muted-foreground">/10</span></p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Protection score
+              </p>
+              <p className={cn("text-2xl font-extrabold tabular-nums", scoreTone)}>
+                {score}
+                <span className="text-sm text-muted-foreground">/10</span>
+              </p>
             </div>
           </div>
           <div className="rounded-lg border border-red-200 bg-red-50/60 p-3">

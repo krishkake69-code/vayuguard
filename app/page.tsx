@@ -1,15 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  ShieldCheck,
-  Sparkles,
-  Wind,
-  Github,
-  Info,
-  RefreshCw,
-  MapPin,
-} from "lucide-react";
+import { ShieldCheck, Sparkles, Wind, Github, Info, RefreshCw, MapPin } from "lucide-react";
 import { CitySelector } from "@/components/city-selector";
 import { AQIHeader } from "@/components/aqi-header";
 import { ProfileConfigurator } from "@/components/profile-configurator";
@@ -182,15 +174,13 @@ export default function Home() {
                   <ShieldCheck className="h-10 w-10 text-muted-foreground" />
                   <p className="text-sm font-semibold">Your low-emission plan is one click away</p>
                   <p className="max-w-sm text-xs text-muted-foreground">
-                    Set your family profile, then hit “Generate My Routine” for an AQI-grounded plan with the exact low-PM2.5 ventilation window.
+                    Set your family profile, then hit “Generate My Routine” for an AQI-grounded plan
+                    with the exact low-PM2.5 ventilation window.
                   </p>
                 </div>
               )}
 
-              <AuditScanner
-                currentAQI={reading.current.aqi}
-                currentPm25={reading.current.pm2_5}
-              />
+              <AuditScanner currentAQI={reading.current.aqi} currentPm25={reading.current.pm2_5} />
             </div>
           </div>
         )}

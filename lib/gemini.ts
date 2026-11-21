@@ -34,10 +34,9 @@ const MODELS = [
   "gemini-2.5-flash-lite",
 ];
 
-type GenerateParams = Omit<
-  Parameters<GoogleGenAI["models"]["generateContent"]>[0],
-  "model"
-> & { model?: string };
+type GenerateParams = Omit<Parameters<GoogleGenAI["models"]["generateContent"]>[0], "model"> & {
+  model?: string;
+};
 
 async function generateWithFallback(params: GenerateParams) {
   const ai = getAI();
@@ -160,7 +159,10 @@ export async function generateRoutine({
 Hourly PM2.5 / PM10 / AQI (next 24h, local city time):
 ${hourly
   .slice(0, 24)
-  .map((h) => `${h.time.slice(11, 16)} PM2.5=${Math.round(h.pm2_5)} PM10=${Math.round(h.pm10)} AQI=${Math.round(h.aqi)}`)
+  .map(
+    (h) =>
+      `${h.time.slice(11, 16)} PM2.5=${Math.round(h.pm2_5)} PM10=${Math.round(h.pm10)} AQI=${Math.round(h.aqi)}`,
+  )
   .join("\n")}
 
 Family Profile:
@@ -217,10 +219,7 @@ Analyze this image for air pollution protection quality and return the strict JS
       contents: [
         {
           role: "user",
-          parts: [
-            { text: prompt },
-            { inlineData: { data: imageBase64, mimeType: imageMimeType } },
-          ],
+          parts: [{ text: prompt }, { inlineData: { data: imageBase64, mimeType: imageMimeType } }],
         },
       ],
       config: {
@@ -248,7 +247,7 @@ Analyze this image for air pollution protection quality and return the strict JS
 export function fallbackRoutine(
   aqi: number,
   profile: FamilyProfile,
-  cityName: string
+  cityName: string,
 ): RoutineResponse {
   const tier =
     aqi <= 50
@@ -274,14 +273,16 @@ export function fallbackRoutine(
     smogAlertLevel: `${tier} Smog Alert (AQI ${Math.round(aqi)}) — ${cityName}`,
     bestVentilationWindow: {
       timeRange: "14:00–16:00 (local time)",
-      reason: "Midday thermal mixing gives the lowest hourly PM2.5 window for brief cross-ventilation.",
+      reason:
+        "Midday thermal mixing gives the lowest hourly PM2.5 window for brief cross-ventilation.",
     },
     dailyTimeline: [
       {
         timeSlot: "06:00–08:30",
         activity: "Stay indoors; skip morning outdoor walks or balcony yoga",
         safetyNote: `Morning inversion traps PM2.5 near ground. High risk for ${worstGroup}.`,
-        emissionTip: "Wet-mop floors instead of dry jhadu/sweeping so settled dust doesn't go airborne.",
+        emissionTip:
+          "Wet-mop floors instead of dry jhadu/sweeping so settled dust doesn't go airborne.",
       },
       {
         timeSlot: "08:30–11:00",
@@ -298,14 +299,17 @@ export function fallbackRoutine(
       {
         timeSlot: "11:00–14:00",
         activity: "Lunch prep & indoor work/study",
-        safetyNote: "Run kitchen exhaust fan at full speed during tadka/frying and for 10 mins after.",
+        safetyNote:
+          "Run kitchen exhaust fan at full speed during tadka/frying and for 10 mins after.",
         emissionTip: "Cover pans while simmering to reduce cooking PM2.5 spikes.",
       },
       {
         timeSlot: "14:00–16:00",
         activity: "10–15 min cross-ventilation window",
-        safetyNote: "Open opposite windows briefly during the lowest-PM2.5 window to flush indoor CO2.",
-        emissionTip: "Shut windows promptly after 15 minutes and seal bottom door gaps with a damp towel.",
+        safetyNote:
+          "Open opposite windows briefly during the lowest-PM2.5 window to flush indoor CO2.",
+        emissionTip:
+          "Shut windows promptly after 15 minutes and seal bottom door gaps with a damp towel.",
       },
       {
         timeSlot: "18:00–21:30",
@@ -320,7 +324,8 @@ export function fallbackRoutine(
       {
         timeSlot: "21:30–06:00",
         activity: "Sleep with bedroom sealed",
-        safetyNote: "Keep bedroom doors/windows shut overnight as winter smog peaks after midnight.",
+        safetyNote:
+          "Keep bedroom doors/windows shut overnight as winter smog peaks after midnight.",
         emissionTip: hasPurifier
           ? "Run purifier on medium/auto mode 1 meter away from walls."
           : "Keep a bowl of water or damp cloth near beds if air feels dry; keep rescue inhalers bedside.",
@@ -339,27 +344,31 @@ export function fallbackRoutine(
                 : m === "schoolKids"
                   ? "Skip outdoor PT/sports when AQI > 200 and ensure a well-fitted kid-size N95 for the school bus wait."
                   : "Limit strenuous outdoor runs when AQI > 150; switch to carpool or Metro to lower city emissions.",
-      })
+      }),
     ),
     indoorAirHacks: [
       {
         title: "Wet mop instead of dry jhadu",
-        action: "Damp mopping traps settled PM2.5 dust without kicking it back into breathing height.",
+        action:
+          "Damp mopping traps settled PM2.5 dust without kicking it back into breathing height.",
         costTag: "Free",
       },
       {
         title: "Exhaust fan on during tadka",
-        action: "Run the kitchen exhaust (or crack only the kitchen window) while frying and 10 mins after.",
+        action:
+          "Run the kitchen exhaust (or crack only the kitchen window) while frying and 10 mins after.",
         costTag: "Free",
       },
       {
         title: "Damp towel door-gap seal",
-        action: "Roll a damp cotton towel along the bottom gap of main & balcony doors after sunset.",
+        action:
+          "Roll a damp cotton towel along the bottom gap of main & balcony doors after sunset.",
         costTag: "Free",
       },
       {
         title: "Two-finger N95 seal check",
-        action: "Pinch the metal nose bridge firmly and check that the mask pulls in slightly when you inhale.",
+        action:
+          "Pinch the metal nose bridge firmly and check that the mask pulls in slightly when you inhale.",
         costTag: "Low-Cost",
       },
       {

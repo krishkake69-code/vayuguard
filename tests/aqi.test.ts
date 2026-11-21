@@ -49,7 +49,10 @@ describe("computeBestVentilationWindow", () => {
   it("finds the exact lowest-average 2-hour window", () => {
     // 14:00-15:00 has the lowest values (40, 40 -> avg 40).
     const window = computeBestVentilationWindow(
-      hourly([200, 180, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 40, 40, 60, 80, 90, 100, 120, 140, 160, 180, 200])
+      hourly([
+        200, 180, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 40, 40, 60, 80, 90, 100, 120,
+        140, 160, 180, 200,
+      ]),
     );
     expect(window.timeRange).toBe("13:00–14:00");
     expect(window.avgPm25).toBe(40);
@@ -73,7 +76,10 @@ describe("computeBestVentilationWindow", () => {
 describe("buildAQIReading", () => {
   const raw = {
     hourly: {
-      time: Array.from({ length: 120 }, (_, i) => `2026-11-21T${String(i % 24).padStart(2, "0")}:00`),
+      time: Array.from(
+        { length: 120 },
+        (_, i) => `2026-11-21T${String(i % 24).padStart(2, "0")}:00`,
+      ),
       pm2_5: Array.from({ length: 120 }, (_, i) => 50 + i),
       pm10: Array.from({ length: 120 }, (_, i) => 80 + i),
       us_aqi: Array.from({ length: 120 }, () => 120),
@@ -127,7 +133,15 @@ describe("geocodeCity", () => {
     global.fetch = vi.fn(async () => ({
       ok: true,
       json: async () => ({
-        results: [{ name: "Pune", latitude: 18.5, longitude: 73.8, country_code: "IN", admin1: "Maharashtra" }],
+        results: [
+          {
+            name: "Pune",
+            latitude: 18.5,
+            longitude: 73.8,
+            country_code: "IN",
+            admin1: "Maharashtra",
+          },
+        ],
       }),
     })) as any;
     try {
@@ -153,7 +167,12 @@ describe("searchLocalities", () => {
           lat: "28.67",
           lon: "77.46",
           display_name: "Shastri Nagar, Ghaziabad, Uttar Pradesh, India",
-          address: { neighbourhood: "Shastri Nagar", city: "Ghaziabad", state: "Uttar Pradesh", country_code: "in" },
+          address: {
+            neighbourhood: "Shastri Nagar",
+            city: "Ghaziabad",
+            state: "Uttar Pradesh",
+            country_code: "in",
+          },
         },
         {
           lat: "48.85",
@@ -212,7 +231,16 @@ describe("AQI tier helpers", () => {
 describe("constants", () => {
   it("preloads the 8 required Indian cities", () => {
     const names = INDIAN_CITIES.map((c) => c.name.toLowerCase());
-    ["delhi", "gurugram", "noida", "ghaziabad", "mumbai", "bengaluru", "chennai", "kolkata"].forEach((n) => {
+    [
+      "delhi",
+      "gurugram",
+      "noida",
+      "ghaziabad",
+      "mumbai",
+      "bengaluru",
+      "chennai",
+      "kolkata",
+    ].forEach((n) => {
       expect(names).toContain(n);
     });
   });

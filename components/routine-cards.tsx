@@ -12,10 +12,23 @@ import {
 import type { RoutineResponse } from "@/types";
 import { cn } from "@/lib/utils";
 
-function SectionTitle({ icon, children, tone }: { icon: React.ReactNode; children: React.ReactNode; tone?: string }) {
+function SectionTitle({
+  icon,
+  children,
+  tone,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  tone?: string;
+}) {
   return (
     <div className="flex items-center gap-2">
-      <span className={cn("flex h-7 w-7 items-center justify-center rounded-md", tone || "bg-foreground/5 text-foreground")}>
+      <span
+        className={cn(
+          "flex h-7 w-7 items-center justify-center rounded-md",
+          tone || "bg-foreground/5 text-foreground",
+        )}
+      >
         {icon}
       </span>
       <h3 className="text-sm font-bold uppercase tracking-wide">{children}</h3>
@@ -71,7 +84,10 @@ export function RoutineCards({ routine }: { routine: RoutineResponse }) {
 
           {/* Member warnings */}
           <div className="card rounded-xl border border-amber-200 bg-amber-50/50 p-4">
-            <SectionTitle icon={<ShieldAlert className="h-4 w-4" />} tone="bg-amber-500/10 text-amber-700">
+            <SectionTitle
+              icon={<ShieldAlert className="h-4 w-4" />}
+              tone="bg-amber-500/10 text-amber-700"
+            >
               Member-Specific Warnings
             </SectionTitle>
             <div className="mt-2 space-y-2">
@@ -99,10 +115,12 @@ export function RoutineCards({ routine }: { routine: RoutineResponse }) {
                     "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase",
                     h.costTag === "Free"
                       ? "bg-green-100 text-green-800"
-                      : "bg-sky-100 text-sky-800"
+                      : "bg-sky-100 text-sky-800",
                   )}
                 >
-                  {h.costTag === "Free" ? <IndianRupee className="mr-0.5 inline h-2.5 w-2.5" /> : null}
+                  {h.costTag === "Free" ? (
+                    <IndianRupee className="mr-0.5 inline h-2.5 w-2.5" />
+                  ) : null}
                   {h.costTag}
                 </span>
               </div>
