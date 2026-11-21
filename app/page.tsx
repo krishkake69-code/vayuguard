@@ -118,7 +118,7 @@ export default function Home() {
             </span>
             {reading && <SeverityBadge aqi={reading.current.aqi} size="sm" />}
             <a
-              href="https://github.com/krishkake69-code/urban"
+              href="https://github.com/krishkake69-code/vayuguard"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost hidden sm:inline-flex"

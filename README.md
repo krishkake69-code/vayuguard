@@ -4,7 +4,7 @@
 
 VayuGuard is a full-stack AI assistant that helps **Indian families** beat severe winter smog with **live AQI-grounded low-emission routines**, **Indoor air hacks**, and a **multimodal Room & Mask Auditor**.
 
-🔗 **Repository:** https://github.com/krishkake69-code/urban
+🔗 **Repository:** https://github.com/krishkake69-code/vayuguard
 
 ---
 
