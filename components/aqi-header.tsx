@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, Wind, Eye, CalendarClock, Loader2, MapPin } from "lucide-react";
+import { Wind, Eye, CalendarClock, Loader2, MapPin } from "lucide-react";
 import { SeverityBadge } from "@/components/severity-badge";
 import { cn } from "@/lib/utils";
 import type { AQIReading } from "@/types";

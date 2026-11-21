@@ -86,6 +86,40 @@ export function computeIndianAQI(pm25: number, pm10: number): number {
 
 export type GeoCity = { name: string; latitude: number; longitude: number; country: string; admin1?: string };
 
+type GeocodeResult = {
+  name: string;
+  latitude: number;
+  longitude: number;
+  country_code?: string;
+  country?: string;
+  admin1?: string;
+};
+
+type NominatimAddress = {
+  neighbourhood?: string;
+  suburb?: string;
+  quarter?: string;
+  residential?: string;
+  city_district?: string;
+  town?: string;
+  village?: string;
+  city?: string;
+  county?: string;
+  state?: string;
+  state_district?: string;
+  country_code?: string;
+};
+
+type NominatimResult = {
+  lat: string;
+  lon: string;
+  display_name?: string;
+  address?: NominatimAddress;
+};
+
+type HourlyReading = { time: string; pm2_5: number; pm10: number; aqi: number };
+type VentilationWindow = { timeRange: string; reason: string; avgPm25: number };
+
 /** Search ANY city worldwide (no country filter) — like a mobile app search. */
 export async function geocodeCity(query: string): Promise<GeoCity[]> {
   if (!query || query.trim().length < 2) return [];
@@ -93,7 +127,7 @@ export async function geocodeCity(query: string): Promise<GeoCity[]> {
   const res = await withTimeout(fetch(url));
   if (!res.ok) return [];
   const data = await res.json();
-  return (data.results || []).map((r: any) => ({
+  return (data.results || []).map((r: GeocodeResult) => ({
     name: r.name,
     latitude: r.latitude,
     longitude: r.longitude,
@@ -115,9 +149,9 @@ export async function searchLocalities(query: string): Promise<LocalityResult[]>
     if (!res.ok) return [];
     const data = await res.json();
     return (Array.isArray(data) ? data : [])
-      .filter((r: any) => r.address?.country_code === "in" || /india/i.test(r.display_name || ""))
-      .map((r: any) => {
-        const a = r.address || {};
+      .filter((r: NominatimResult) => r.address?.country_code === "in" || /india/i.test(r.display_name || ""))
+      .map((r: NominatimResult) => {
+        const a: NominatimAddress = r.address || {};
         const name =
           a.neighbourhood || a.suburb || a.quarter || a.residential ||
           a.city_district || a.town || a.village || a.city || a.county ||
@@ -143,7 +177,7 @@ export async function reverseGeocode(latitude: number, longitude: number): Promi
   try {
     const url = `${REVERSE_GEO_BASE}?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
     const res = await withTimeout(fetch(url), 8000);
-    if (!res.ok) return null;
+    if (!res.ok) throw new Error(`Reverse geocoding failed: ${res.status}`);
     const d = await res.json();
     const name = d.city || d.locality || d.principalSubdivision || "My location";
     return {
@@ -206,7 +240,7 @@ export function computeBestVentilationWindow(
 export function buildAQIReading(
   city: { name: string; latitude: number; longitude: number; country?: string },
   raw: RawAQResponse
-): { current: any; hourly: any[]; bestVentilationWindow: any } {
+): { current: HourlyReading; hourly: HourlyReading[]; bestVentilationWindow: VentilationWindow } {
   const all = raw.hourly.time.map((t, i) => {
     const pm25 = raw.hourly.pm2_5[i] ?? 0;
     const pm10 = raw.hourly.pm10[i] ?? 0;

@@ -34,16 +34,18 @@ const MODELS = [
   "gemini-2.5-flash-lite",
 ];
 
-async function generateWithFallback(params: {
-  contents: any;
-  config: any;
-}) {
+type GenerateParams = Omit<
+  Parameters<GoogleGenAI["models"]["generateContent"]>[0],
+  "model"
+> & { model?: string };
+
+async function generateWithFallback(params: GenerateParams) {
   const ai = getAI();
   if (!ai) throw new Error("Gemini client unavailable");
   let lastErr: unknown;
   for (const model of MODELS) {
     try {
-      return await ai.models.generateContent({ model, ...params });
+      return await ai.models.generateContent({ ...params, model });
     } catch (err) {
       lastErr = err;
       console.warn(`[VayuGuard] Gemini model ${model} failed, trying next…`);

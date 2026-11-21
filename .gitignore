@@ -4,10 +4,12 @@ node_modules/
 out/
 .env
 .env.local
+.env*
 .taste-skill/
 shots/
 *.log
 .agents/
 *.tsbuildinfo
-.vercel
-.env*
+.vercel/
+.playwright-mcp/
+*.png
