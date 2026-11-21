@@ -24,7 +24,33 @@ function getAI(): GoogleGenAI | null {
   return aiClient;
 }
 
-const MODEL = "gemini-2.5-flash";
+/* Google retires individual Gemini model versions over time (e.g. 2.5-flash
+ * became unavailable to new projects). Try the current flash alias first,
+ * then progressively older fallbacks, so the app keeps working. */
+const MODELS = [
+  "gemini-3-flash-preview", // currently available on new projects
+  "gemini-flash-latest", // rolling alias (can 503 under load)
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+];
+
+async function generateWithFallback(params: {
+  contents: any;
+  config: any;
+}) {
+  const ai = getAI();
+  if (!ai) throw new Error("Gemini client unavailable");
+  let lastErr: unknown;
+  for (const model of MODELS) {
+    try {
+      return await ai.models.generateContent({ model, ...params });
+    } catch (err) {
+      lastErr = err;
+      console.warn(`[VayuGuard] Gemini model ${model} failed, trying next…`);
+    }
+  }
+  throw lastErr;
+}
 
 /* ---------------------------------------------------------------- Routine schema */
 const ROUTINE_SCHEMA: Schema = {
@@ -146,12 +172,8 @@ Generate the practical, low-emission daily routine.`;
     return fallbackRoutine(currentAQI, profile, cityName);
   }
 
-  const ai = getAI();
-  if (!ai) return fallbackRoutine(currentAQI, profile, cityName);
-
   try {
-    const response = await ai.models.generateContent({
-      model: MODEL,
+    const response = await generateWithFallback({
       contents: prompt,
       config: {
         systemInstruction: ROUTINE_SYSTEM,
@@ -188,12 +210,8 @@ Analyze this image for air pollution protection quality and return the strict JS
     return fallbackAudit(currentAQI);
   }
 
-  const ai = getAI();
-  if (!ai) return fallbackAudit(currentAQI);
-
   try {
-    const response = await ai.models.generateContent({
-      model: MODEL,
+    const response = await generateWithFallback({
       contents: [
         {
           role: "user",
