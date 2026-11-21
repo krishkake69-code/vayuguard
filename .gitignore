@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.next/
+out/
+.env
+.env.local
+.taste-skill/
+shots/
+*.log
+.agents/
+*.tsbuildinfo
+.vercel
+.env*
